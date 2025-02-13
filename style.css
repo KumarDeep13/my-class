@@ -11,7 +11,8 @@ body {
 }
 /* Container for the entire app (simulate a mobile device width) */
 .app {
-  max-width: 768px; /* approximate mobile width */
+ /* max-width: 768px;*/ /* approximate mobile width */
+  width: 100%;
   margin: 0 auto;
   background-color: #fff;
   height: 100vh;
