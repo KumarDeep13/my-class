@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Class Progress App</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- React and Babel -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+
+    <!-- Notice the addition of data-presets="env,react" below -->
+    <script type="text/babel" data-presets="es2015,react">
+      const { useState, useEffect } = React;
+
+      // Dummy function for live updates
+      function updateRandomStudent(students) {
+        return students; // For now, no update
+      }
+
+      /********************************************************
+       *  DUMMY DATA
+       *******************************************************/
+      // Top 5 students (for hero-style cards)
+      const topStudentsData = [
+        {
+          id: 1,
+          name: "Alice Johnson",
+          image: "image animated/a.png?text=Alice",
+          description: "Top of the class in Math",
+        },
+        {
+          id: 2,
+          name: "Bob Smith",
+          image: "image animated/b.png?text=Bob",
+          description: "Excellent in Science",
+        },
+        {
+          id: 3,
+          name: "Cathy Brown",
+          image: "image animated/c.png?text=Cathy",
+          description: "Champion in History",
+        },
+        {
+          id: 4,
+          name: "David Wilson",
+          image: "image animated/d.png?text=David",
+          description: "Language prodigy",
+        },
+        {
+          id: 5,
+          name: "Emily Green",
+          image: "image animated/e.png?text=Emily",
+          description: "Arts & Crafts star",
+        },
+      ];
+
+      // Categories
+      const categoriesData = [
+        {
+          id: 1,
+          name: "Math",
+          icon: "https://cdn-icons-png.flaticon.com/512/535/535234.png",
+          description: "All about math courses, competitions, and resources.",
+        },
+        {
+          id: 2,
+          name: "Science",
+          icon: "https://cdn-icons-png.flaticon.com/512/4333/4333609.png",
+          description: "Explore science fairs, labs, and projects.",
+        },
+        {
+          id: 3,
+          name: "History",
+          icon: "https://cdn-icons-png.flaticon.com/512/3799/3799736.png",
+          description: "Historical studies, archives, and museum visits.",
+        },
+        {
+          id: 4,
+          name: "Language",
+          icon: "https://cdn-icons-png.flaticon.com/512/3219/3219361.png",
+          description: "Language classes, speech competitions, and more.",
+        },
+        {
+          id: 5,
+          name: "Arts",
+          icon: "https://cdn-icons-png.flaticon.com/512/1027/1027925.png",
+          description: "Painting, music, drama, and other art forms.",
+        },
+        {
+          id: 6,
+          name: "Sports",
+          icon: "https://cdn-icons-png.flaticon.com/512/711/711987.png",
+          description: "All sports activities and athletic events.",
+        },
+      ];
+
+      // All students
+      const studentsData = [
+        {
+          id: 11,
+          name: "Grace Parker",
+          photo: "image animated/a.png?text=Grace",
+          classInfo: "Class A",
+          progress: "Top 5%",
+          achievements: ["Math Olympiad Winner", "Science Fair Runner-up"],
+          performance: 0.85,
+        },
+        {
+          id: 12,
+          name: "Henry Miller",
+          photo: "image animated/b.png?text=Henry",
+          classInfo: "Class B",
+          progress: "Top 10%",
+          achievements: ["Regional Debate Champion"],
+          performance: 0.75,
+        },
+        {
+          id: 13,
+          name: "Irene Wilson",
+          photo: "image animated/c.png?text=Irene",
+          classInfo: "Class A",
+          progress: "Top 20%",
+          achievements: ["Art Competition Winner"],
+          performance: 0.65,
+        },
+        {
+          id: 14,
+          name: "Jack Carter",
+          photo: "image animated/d.png?text=Jack",
+          classInfo: "Class C",
+          progress: "Top 25%",
+          achievements: ["Basketball MVP"],
+          performance: 0.55,
+        },
+        {
+          id: 15,
+          name: "Karen Davis",
+          photo: "image animated/e.png?text=Karen",
+          classInfo: "Class B",
+          progress: "Top 15%",
+          achievements: ["Essay Writing Contest Winner"],
+          performance: 0.7,
+        },
+      ];
+
+      /********************************************************
+       *  COMPONENTS
+       *******************************************************/
+      function HomePage({
+        topStudents,
+        categories,
+        allStudents,
+        onCategoryClick,
+        onStudentClick,
+      }) {
+        const [searchQuery, setSearchQuery] = useState("");
+
+        // Handler when the search icon is clicked
+        const handleSearchClick = () => {
+          // Find the first student whose name includes the search query (case-insensitive)
+          const foundStudent = allStudents.find((student) =>
+            student.name.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+
+          if (foundStudent) {
+            // If a match is found, open that student's profile page
+            onStudentClick(foundStudent);
+          } else {
+            // Optionally, display a message if no student is found
+            alert("No student found matching your search query.");
+          }
+        };
+
+        return (
+          <React.Fragment>
+            {/* Top Bar */}
+            <div className="top-bar">
+              <div className="top-bar-location">MY CLASS</div>
+              <div className="top-bar-avatar">
+                <img
+                  src="image animated\main-logo.jpeg?text=Teacher"
+                  alt="Avatar"
+                />
+              </div>
+            </div>
+            {/* Search Bar */}
+            <div className="search-bar-container">
+              <div className="search-bar">
+                <input
+                  type="text"
+                  placeholder="Search students, classes..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <svg
+                  onClick={handleSearchClick}
+                  style={{ cursor: "pointer" }}
+                  fill="#000000"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 32 32"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <title />
+                  <path d="M11.5,8a1,1,0,0,1-1,1A2.5,2.5,0,0,0,8,11.5a1,1,0,0,1-2,0A4.5,4.5,0,0,1,10.5,7,1,1,0,0,1,11.5,8ZM28.45,25.329a1,1,0,0,1-.293.707l-2.122,2.121a1,1,0,0,1-1.414,0l-7.778-7.778a1,1,0,0,1,0-1.414l.354-.354L15.584,17a7.522,7.522,0,1,1,1.28-1.548L18.611,17.2l.354-.353a1,1,0,0,1,1.414,0l7.778,7.778A1,1,0,0,1,28.45,25.329ZM16,11.5A5.5,5.5,0,1,0,10.5,17,5.507,5.507,0,0,0,16,11.5ZM26.036,25.329l-6.364-6.364-.708.707,6.364,6.364Z" />
+                </svg>
+              </div>
+            </div>
+            {/* Horizontal Cards (Top 5 Students) */}
+            <div class="marquee--wrap">
+              <div className="horizontal-cards">
+                {topStudents.map((stu) => (
+                  <div key={stu.id} className="hero-card">
+                    <div className="hero-card-text">
+                      <h3>{stu.name}</h3>
+                      <p>{stu.description}</p>
+                    </div>
+                    <div className="hero-card-img">
+                      <img src={stu.image} alt={stu.name} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Categories */}
+            <div className="categories">
+              {categories.map((cat) => (
+                <div
+                  key={cat.id}
+                  className="category-card"
+                  onClick={() => onCategoryClick(cat)}
+                >
+                  <div className="category-icon">
+                    <img src={cat.icon} alt={cat.name} />
+                  </div>
+                  <div className="category-name">{cat.name}</div>
+                </div>
+              ))}
+            </div>
+            {/* Student List */}
+            <div className="section-title">Student List</div>
+            <div className="student-list">
+              {allStudents.map((student) => (
+                <div
+                  key={student.id}
+                  className="student-card"
+                  onClick={() => onStudentClick(student)}
+                >
+                  <div className="student-photo">
+                    <img src={student.photo} alt={student.name} />
+                  </div>
+                  <div className="student-info">
+                    <h4>{student.name}</h4>
+                    <p>{student.classInfo}</p>
+                  </div>
+                  <div className="student-progress">{student.progress}</div>
+                </div>
+              ))}
+            </div>
+          </React.Fragment>
+        );
+      }
+
+      function CategoryDetailsPage({ category, onBack }) {
+        return (
+          <React.Fragment>
+            <div className="category-details">
+              <div className="back-button" onClick={onBack}>
+                &larr; Back
+              </div>
+              <h2>{category.name} Academy</h2>
+              <div className="category-info">
+                <p>{category.description}</p>
+                <p>
+                  <strong>More details:</strong> This page can display info
+                  about classes, schedules, resources, etc. for {category.name}.
+                </p>
+              </div>
+            </div>
+          </React.Fragment>
+        );
+      }
+
+      function StudentProfilePage({ student, onBack }) {
+        const circumference = 314;
+        const offset = circumference * (1 - student.performance);
+        const barValues = [60, 80, 40, 100, 70];
+        return (
+          <React.Fragment>
+            <div className="profile-page">
+              <div className="back-button-profile" onClick={onBack}>
+                &larr; Back
+              </div>
+              <div className="profile-header">
+                <div className="profile-pic">
+                  <img src={student.photo} alt={student.name} />
+                </div>
+                <div className="profile-info">
+                  <h2>{student.name}</h2>
+                  <p>{student.classInfo}</p>
+                </div>
+              </div>
+              <div className="stats-container">
+                <div
+                  style={{
+                    backgroundColor: "#fff",
+                    borderRadius: "12px",
+                    padding: "16px",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                  }}
+                >
+                  <h3 style={{ marginBottom: "12px" }}>Performance</h3>
+                  <div className="circular-progress">
+                    <svg width="120" height="120" viewBox="0 0 120 120">
+                      <circle
+                        className="circle-bg"
+                        cx="60"
+                        cy="60"
+                        r="50"
+                        stroke="#eee"
+                      />
+                      <circle
+                        className="circle-fg"
+                        cx="60"
+                        cy="60"
+                        r="50"
+                        stroke="#007aff"
+                        strokeDasharray={circumference}
+                        strokeDashoffset={offset}
+                      />
+                    </svg>
+                  </div>
+                  <p style={{ textAlign: "center", marginTop: "8px" }}>
+                    {(student.performance * 100).toFixed(0)}%
+                  </p>
+                </div>
+                <div className="bar-chart">
+                  {barValues.map((val, i) => (
+                    <div
+                      key={i}
+                      className="bar"
+                      style={{ height: `${val}%` }}
+                    />
+                  ))}
+                </div>
+                <div className="achievements">
+                  <h3>Achievements</h3>
+                  <ul>
+                    {student.achievements.map((ach, idx) => (
+                      <li key={idx}>{ach}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </React.Fragment>
+        );
+      }
+
+      function App() {
+        const [page, setPage] = useState("home");
+        const [selectedCategory, setSelectedCategory] = useState(null);
+        const [selectedStudent, setSelectedStudent] = useState(null);
+        const [isLoading, setIsLoading] = useState(true);
+        const [students, setStudents] = useState(studentsData);
+
+        useEffect(() => {
+          setTimeout(() => setIsLoading(false), 2000);
+        }, []);
+
+        useEffect(() => {
+          const interval = setInterval(() => {
+            setStudents((prev) => updateRandomStudent(prev));
+          }, 5000);
+          return () => clearInterval(interval);
+        }, []);
+
+        const handleCategoryClick = (cat) => {
+          setSelectedCategory(cat);
+          setPage("category");
+        };
+
+        const handleStudentClick = (stu) => {
+          setSelectedStudent(stu);
+          setPage("student");
+        };
+
+        const [activeNav, setActiveNav] = useState("home");
+
+        let content;
+        if (isLoading) {
+          content = <div className="loading-spinner" />;
+        } else if (page === "home") {
+          content = (
+            <HomePage
+              topStudents={topStudentsData}
+              categories={categoriesData}
+              allStudents={students}
+              onCategoryClick={handleCategoryClick}
+              onStudentClick={handleStudentClick}
+            />
+          );
+        } else if (page === "category") {
+          content = (
+            <CategoryDetailsPage
+              category={selectedCategory}
+              onBack={() => setPage("home")}
+            />
+          );
+        } else if (page === "student") {
+          content = (
+            <StudentProfilePage
+              student={selectedStudent}
+              onBack={() => setPage("home")}
+            />
+          );
+        }
+
+        return (
+          <div className="app">
+            {content}
+            <div className="bottom-nav">
+              {/* Bottom Navigation Items can be added here */}
+            </div>
+          </div>
+        );
+      }
+
+      ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+  </body>
+</html>
